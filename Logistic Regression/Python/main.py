@@ -1,3 +1,7 @@
+'''
+Codes come from Machine Leaning in Action
+Modified by Shangyu Chen in Dec.17th, 2015
+'''
 from numpy import *
 import matplotlib.pyplot as pyplot
 from logRegression import *
@@ -18,7 +22,7 @@ train_x, train_y = loadData()
 #print shape(train_x)
 
 print 'Step 2: Training'
-opts = {'alpha':0.01, 'maxIter':200, 'optimizeType': 'stochgradDescent'}
+opts = {'alpha':0.01, 'maxIter':200, 'optimizeType':'smoothStocGradDescent'}
 optimalWeights = trainLogRegress(train_x, train_y, opts)
 #print optimalWeights
 

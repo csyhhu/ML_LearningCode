@@ -9,19 +9,34 @@ def trainLogRegress(train_x, train_y, opts):
 	numSamples, numFeatures = shape(train_x) #100, 3
 	alpha = opts['alpha']
 	maxIter = opts['maxIter']
-	weights = ones((numFeatures, 1))
+	weights = zeros((numFeatures, 1)) #Here we can choose zeros or ones
 
 	if opts['optimizeType'] == 'gradDescent':
 		for k in range(maxIter):
-			output = sigmoid(train_x * weights)
+			output = sigmoid(train_x * weights) # This step calculate all the samples, output is an N*1 vector
 			error = train_y - output
 			weights = weights + alpha * train_x.transpose() * error
 	elif opts['optimizeType'] == 'stochgradDescent':
+		'''
+		This method calculate all the samples for just one time
+		'''
+		for k in range(numSamples):
+			output = sigmoid(train_x[k,:] * weights) # Output is a number
+			error = train_y[k,0] - output
+			weights = weights + alpha * train_x[k,:].transpose() * error
+	elif opts['optimizeType'] == 'smoothStocGradDescent': 
+		'''
+		This method will randomly choose a sample to calculate
+		'''
 		for k in range(maxIter):
-			for j in range(numSamples):
-				output = sigmoid(train_x[j,:] * weights)
-				error = train_y[j,0] - output
-				weights = weights + alpha * train_x[j,:].transpose() * error
+			dataIndex = range(numSamples)
+			for i in range(numSamples):
+				alpha = 4/(1.0+k+i)+0.01
+				randIndex = int(random.uniform(0,len(dataIndex)))
+				output = sigmoid(train_x[randIndex,:] * weights)
+				error = train_y[randIndex,0] - output
+				weights = weights + alpha * train_x[randIndex,:].transpose() * error
+				del(dataIndex[randIndex])
 
 	return weights
 
